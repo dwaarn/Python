@@ -1,0 +1,45 @@
+import numpy as np
+#from sklearn.datasets import make_blobs
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+
+
+class ALEA:
+
+    def __init__(self, random_state = None):
+        if random_state is None:
+            random_state =  np.random.seed(np.random.randint(0, 200))
+        else:
+            random_state = random_state
+        
+    def fit(self, X):
+        return 
+    
+    def predict(self, X):
+        probas = np.zeros((X.shape[0], 2))
+        predictions = []
+        for i in range(X.shape[0]):
+            predictions.append(np.random.randint(0,2))
+            probas[i] = [0.5, 0.5]
+        return probas, predictions
+    
+X = np.array([[1,2], [5,4], [4,7], [6,9]])
+Y = [1, 1, 0, 0]
+est = ALEA(random_state=None)
+est.fit(X)
+probas, predictions = est.predict(X)
+print(probas[:,1] >= 0.6)
+
+seuils = np.linspace(0, 1, 111)
+x, y = [], [] # coordonnées pour la visualisation
+for seuil in seuils:
+    cf = confusion_matrix(y_true=Y, y_pred=probas[:, 1] >= seuil)
+    sensi = cf[1, 1]/np.sum(cf[1, :])
+    spe = cf[0, 0]/np.sum(cf[0, :])
+    antispe = 1 - spe
+    x.append(antispe)
+    y.append(sensi)
+plt.plot(x, y, '--', color='gray')
+# marquer les points pour chaque seuil
+plt.plot(x, y, '.', c='black')
+plt.show()
